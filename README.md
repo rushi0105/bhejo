@@ -10,6 +10,8 @@ No cloud, no accounts, no telemetry, no `node_modules`.
 
 Both devices must be on the same Wi-Fi or LAN. Nothing leaves the local network.
 
+Landing page: <https://rushi0105.github.io/bhejo/>
+
 ## Why not just use LocalSend?
 
 Use LocalSend — it is excellent, mature, and has a GUI on five platforms. Bhejo

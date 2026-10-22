@@ -12,6 +12,8 @@ Both devices must be on the same Wi-Fi or LAN. Nothing leaves the local network.
 
 Landing page: <https://rushi0105.github.io/bhejo/>
 
+![The Bhejo browser interface](docs/screenshot.png)
+
 ## Why not just use LocalSend?
 
 Use LocalSend — it is excellent, mature, and has a GUI on five platforms. Bhejo

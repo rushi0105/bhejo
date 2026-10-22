@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bhejo — send files over your local network</title>
+<meta name="description" content="Peer-to-peer file sharing on your local network. No cloud, no accounts, no telemetry, no dependencies. Encrypted, verified, original quality.">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23000'/%3E%3Ctext x='32' y='46' font-family='Helvetica,Arial' font-size='40' font-weight='700' fill='%23fff' text-anchor='middle'%3Eb%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#0a0a0a; --panel:#111; --line:#242424; --line-soft:#1a1a1a;
+    --fg:#f2f2f2; --muted:#8f8f8f; --dim:#5a5a5a; --white:#fff; --black:#000;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);
+    font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--fg);text-decoration:none;border-bottom:1px solid var(--line)}
+  a:hover{border-bottom-color:var(--fg)}
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px}
+  code,pre{font-family:var(--mono);font-size:14px}
+  code{background:var(--panel);border:1px solid var(--line-soft);border-radius:3px;padding:1px 5px}
+  pre{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px 20px;overflow:auto;line-height:1.7;margin:0}
+  pre code{background:none;border:0;padding:0;font-size:14px}
+
+  /* header */
+  header{border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(10,10,10,.88);backdrop-filter:blur(8px);z-index:5}
+  .bar{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .mark{font-family:var(--mono);font-size:15px;letter-spacing:.14em;text-transform:uppercase}
+  .mark b{font-weight:600}
+  .bar nav{display:flex;gap:22px;font-size:14px;color:var(--muted)}
+  .bar nav a{color:var(--muted);border:0}
+  .bar nav a:hover{color:var(--fg)}
+
+  /* hero */
+  .hero{padding:96px 0 72px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin:0 0 26px}
+  h1{font-size:clamp(38px,6.2vw,64px);line-height:1.06;letter-spacing:-.03em;font-weight:600;margin:0 0 26px;max-width:16ch}
+  .lede{font-size:clamp(17px,2vw,20px);color:var(--muted);max-width:56ch;margin:0 0 38px}
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:44px}
+  .btn{display:inline-block;padding:12px 22px;border-radius:4px;font-size:15px;border:1px solid var(--fg);background:var(--fg);color:var(--black);font-weight:500}
+  .btn:hover{background:var(--white);border-color:var(--white)}
+  .btn.ghost{background:transparent;color:var(--fg);border-color:var(--line)}
+  .btn.ghost:hover{border-color:var(--fg);background:transparent}
+  .facts{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+  .facts div{flex:1 1 150px;padding:14px 18px;border-right:1px solid var(--line);font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .facts div:last-child{border-right:0}
+  .facts b{display:block;color:var(--fg);font-size:15px;letter-spacing:0;text-transform:none;font-family:var(--sans);font-weight:500;margin-top:3px}
+
+  /* sections */
+  section{padding:84px 0;border-bottom:1px solid var(--line)}
+  h2{font-size:13px;font-family:var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--dim);font-weight:500;margin:0 0 40px}
+  h3{font-size:19px;font-weight:600;letter-spacing:-.01em;margin:0 0 8px}
+  p{margin:0 0 18px}
+  .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:0;border-top:1px solid var(--line-soft)}
+  .cell{padding:28px 28px 28px 0;border-bottom:1px solid var(--line-soft)}
+  .cell p{color:var(--muted);font-size:15.5px;margin:0}
+  .cell .n{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.1em;display:block;margin-bottom:14px}
+
+  .shot{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel)}
+  .shot img{display:block;width:100%;height:auto}
+  .cap{font-family:var(--mono);font-size:12px;color:var(--dim);margin:14px 0 0}
+
+  .steps{counter-reset:s;list-style:none;padding:0;margin:0}
+  .steps li{counter-increment:s;position:relative;padding:0 0 26px 52px;border-left:1px solid var(--line-soft);margin-left:14px}
+  .steps li:last-child{border-left-color:transparent;padding-bottom:0}
+  .steps li::before{
+    content:counter(s);position:absolute;left:-14px;top:0;width:28px;height:28px;border-radius:50%;
+    background:var(--bg);border:1px solid var(--line);color:var(--muted);
+    font-family:var(--mono);font-size:12px;display:flex;align-items:center;justify-content:center
+  }
+  .steps b{display:block;font-weight:500;margin-bottom:2px}
+  .steps span{color:var(--muted);font-size:15.5px}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+  .note{border-left:2px solid var(--line);padding-left:18px;color:var(--muted);font-size:15px}
+
+  ul.plain{list-style:none;padding:0;margin:0}
+  ul.plain li{padding:12px 0;border-bottom:1px solid var(--line-soft);color:var(--muted);font-size:15.5px;display:flex;gap:14px}
+  ul.plain li:last-child{border-bottom:0}
+  ul.plain li::before{content:"—";color:var(--dim);font-family:var(--mono)}
+
+  footer{padding:52px 0 72px;color:var(--dim);font-size:13.5px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+  @media (max-width:720px){
+    body{font-size:16px}
+    .hero{padding:64px 0 56px}
+    section{padding:60px 0}
+    .two{grid-template-columns:1fr;gap:32px}
+    .cell{padding:24px 0}
+    .bar nav{gap:16px;font-size:13px}
+  }
+  @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <div class="mark"><b>bhejo</b></div>
+    <nav>
+      <a href="#how">How it works</a>
+      <a href="#start">Quick start</a>
+      <a href="https://github.com/rushi0105/bhejo">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="hero">
+    <p class="eyebrow">bhejo — send</p>
+    <h1>Send a file to the computer next to you.</h1>
+    <p class="lede">
+      Peer-to-peer over your local network. No cloud, no accounts, no upload quota,
+      no dependencies. Your files never leave the room, and they arrive byte for byte identical.
+    </p>
+    <div class="actions">
+      <a class="btn" href="https://github.com/rushi0105/bhejo">Get it on GitHub</a>
+      <a class="btn ghost" href="#start">Quick start</a>
+    </div>
+    <div class="facts">
+      <div>Dependencies<b>None</b></div>
+      <div>Transport<b>TLS, pinned</b></div>
+      <div>Verified<b>SHA-256</b></div>
+      <div>License<b>MIT</b></div>
+    </div>
+  </div>
+
+  <section id="ui">
+    <h2>The interface</h2>
+    <div class="shot">
+      <img src="screenshot.png" alt="The Bhejo browser interface: a drop area, a device list and a transfer log, in black and white." width="1140" height="838">
+    </div>
+    <p class="cap">One page, served by the receiver on 127.0.0.1 — it never leaves your machine.</p>
+  </section>
+
+  <section id="why">
+    <h2>What it does differently</h2>
+    <div class="cols">
+      <div class="cell">
+        <span class="n">01</span>
+        <h3>Nothing in the middle</h3>
+        <p>Two machines open a socket to each other. No server to trust, no account to create, no file sitting on someone else's disk.</p>
+      </div>
+      <div class="cell">
+        <span class="n">02</span>
+        <h3>Encrypted, and pinned</h3>
+        <p>TLS with a real certificate, checked against the fingerprint the other machine prints. Trust on first use, remembered after that.</p>
+      </div>
+      <div class="cell">
+        <span class="n">03</span>
+        <h3>Verified on arrival</h3>
+        <p>The receiver hashes while it writes. Both sides compare SHA-256 at the end. A mismatch is a failure, not a warning.</p>
+      </div>
+      <div class="cell">
+        <span class="n">04</span>
+        <h3>Original quality</h3>
+        <p>Bytes are copied as they are. No re-encoding, no resizing, no "optimising" your photos on the way through.</p>
+      </div>
+      <div class="cell">
+        <span class="n">05</span>
+        <h3>Whole folders</h3>
+        <p>Drop a directory and the structure is walked recursively, then rebuilt on the other side the same way.</p>
+      </div>
+      <div class="cell">
+        <span class="n">06</span>
+        <h3>Optional PIN</h3>
+        <p>Make people prove they are in the room. Auto-accept mode generates one for you unless you say otherwise.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <h2>How it works</h2>
+    <div class="two">
+      <ol class="steps">
+        <li><b>Receive</b><span>One machine starts a receiver and announces itself over multicast.</span></li>
+        <li><b>Discover</b><span>The other lists nearby devices and picks one by name or address.</span></li>
+        <li><b>Confirm once</b><span>First contact shows a certificate fingerprint to compare out loud.</span></li>
+        <li><b>Stream</b><span>The file goes over TLS in one prepare-then-upload handshake, hashed as it lands.</span></li>
+      </ol>
+      <div>
+        <p class="note">
+          Discovery is a multicast beacon on the local subnet — no central registry, no
+          cloud lookup, no domain to resolve. If two machines are on the same network,
+          they can see each other. If they are not, they cannot.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="start">
+    <h2>Quick start</h2>
+    <p style="color:var(--muted);max-width:60ch;margin-bottom:28px">
+      You need Node.js 18.17 or newer. That is the whole list — there is nothing to install.
+    </p>
+<pre><code>git clone https://github.com/rushi0105/bhejo.git
+cd bhejo
+
+# machine A: wait for something to arrive
+node bin/bhejo.mjs receive
+
+# machine B: see who is nearby, then send
+node bin/bhejo.mjs discover
+node bin/bhejo.mjs send ./report.pdf --to Kitchen-PC</code></pre>
+    <p class="cap">Open http://127.0.0.1:53318 on the receiving machine for the browser UI. Run <code>npm link</code> once if you would rather type <code>bhejo</code>.</p>
+  </section>
+
+  <section id="limits">
+    <h2>Honest limitations</h2>
+    <ul class="plain">
+      <li>No resume — an interrupted transfer starts again.</li>
+      <li>One file at a time, sent in sequence.</li>
+      <li>No iOS client. Android works under Termux.</li>
+      <li>IPv4 only, and the browser UI is local to the receiving machine by design.</li>
+      <li>Terminal first. There is no installer, tray icon or auto-update.</li>
+    </ul>
+  </section>
+
+  <footer class="wrap" style="padding-left:0;padding-right:0">
+    <div>Bhejo · MIT · no telemetry, no cookies, no analytics</div>
+    <div><a href="https://github.com/rushi0105/bhejo">github.com/rushi0105/bhejo</a></div>
+  </footer>
+
+</main>
+</body>
+</html>

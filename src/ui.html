@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; form-action 'none'; base-uri 'none'">
+<title>Bhejo</title>
+<style>
+  :root {
+    --bg: #000000;
+    --panel: #0a0a0a;
+    --panel-2: #151515;
+    --line: #2b2b2b;
+    --text: #ffffff;
+    --muted: #8f8f8f;
+    --accent: #ffffff;
+    --accent-dim: #1c1c1c;
+    --danger: #9a9a9a;
+    --warn: #9a9a9a;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+    padding: 0 20px 64px;
+  }
+  header {
+    max-width: 880px; margin: 0 auto; padding: 28px 0 18px;
+    display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+  }
+  .brand { font-size: 22px; font-weight: 650; letter-spacing: -0.02em; }
+  .brand span { color: var(--muted); }
+  .who { color: var(--muted); font-size: 13px; }
+  .who b { color: var(--text); font-weight: 550; }
+  .spacer { flex: 1; }
+  .chip {
+    font: 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: var(--muted); background: var(--panel); border: 1px solid var(--line);
+    padding: 6px 8px; border-radius: 999px; cursor: pointer;
+  }
+  main { max-width: 880px; margin: 0 auto; display: grid; gap: 16px; }
+  .panel {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 18px;
+  }
+  .panel h2 {
+    margin: 0 0 14px; font-size: 12px; font-weight: 600;
+    letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted);
+  }
+  .hidden { display: none !important; }
+
+  .peers { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .peer {
+    display: flex; flex-direction: column; gap: 2px;
+    padding: 9px 12px; border-radius: 9px; cursor: pointer;
+    background: var(--panel-2); border: 1px solid var(--line);
+    transition: border-color .12s, background .12s;
+    min-width: 150px;
+  }
+  .peer:hover { border-color: #3a4a5c; }
+  .peer.selected { border-color: #ffffff; background: #1c1c1c; }
+  .peer .name { font-weight: 550; font-size: 14px; }
+  .peer .addr { font: 11px ui-monospace, monospace; color: var(--muted); }
+
+  .drop {
+    border: 1.5px dashed var(--line); border-radius: 10px;
+    padding: 24px 16px; text-align: center; color: var(--muted);
+    transition: border-color .12s, background .12s;
+  }
+  .drop.over { border-color: var(--accent); background: var(--accent-dim); }
+  .drop p { margin: 0 0 12px; font-size: 13px; }
+  .row { display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; }
+
+  button {
+    font: inherit; font-size: 13px; font-weight: 550;
+    background: var(--panel-2); color: var(--text);
+    border: 1px solid var(--line); border-radius: 8px;
+    padding: 8px 14px; cursor: pointer;
+    transition: background .12s, border-color .12s, opacity .12s;
+  }
+  button:hover:not(:disabled) { border-color: #3a4a5c; background: #1d2732; }
+  button:disabled { cursor: not-allowed; opacity: .45; }
+  button.primary { background: #ffffff; color: #000000; border-color: transparent; }
+  button.primary:hover:not(:disabled) { background: #e2e2e2; }
+  /* A dimmed fill still reads as "press me", so disabled primaries go flat. */
+  button.primary:disabled { background: #111111; color: #5a5a5a; opacity: 1; }
+
+  .send-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .send-row .hint { color: var(--muted); font-size: 12px; margin-right: auto; }
+  .note { color: var(--muted); font-size: 13px; }
+  button.ghost { background: transparent; }
+  button.danger { color: #ffffff; border-color: #3a3a3a; }
+  button.danger:hover:not(:disabled) { background: #1a1a1a; border-color: #666666; }
+  button.small { padding: 4px 9px; font-size: 12px; }
+
+  input[type="text"], input:not([type]) {
+    font: inherit; font-size: 13px; color: var(--text);
+    background: var(--bg); border: 1px solid var(--line);
+    border-radius: 8px; padding: 8px 11px; width: 150px;
+  }
+  input:focus { outline: none; border-color: var(--accent); }
+
+  .staged { display: grid; gap: 4px; margin: 14px 0; }
+  .staged:empty { display: none; }
+  .file {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 10px; border-radius: 8px; background: var(--panel-2);
+    font-size: 13px;
+  }
+  .file .nm { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file .sz { color: var(--muted); font: 11px ui-monospace, monospace; }
+
+  .req { border: 1px solid #333333; background: #101010; border-radius: 10px; padding: 14px; margin-bottom: 10px; }
+  .req .top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+  .req .top b { font-weight: 600; }
+  .req .meta { color: var(--muted); font-size: 12px; }
+  .req ul { margin: 6px 0 12px; padding-left: 18px; color: var(--muted); font-size: 12.5px; }
+  .req li { margin: 2px 0; }
+  .new { color: #ffffff; font-size: 11px; border: 1px solid #444444; background: #1a1a1a; border-radius: 999px; padding: 2px 7px; }
+
+  .activity { display: grid; gap: 10px; }
+  .activity:empty::after { content: "Nothing yet."; color: var(--muted); font-size: 13px; }
+  .xfer { display: grid; gap: 5px; }
+  .xfer .top { display: flex; gap: 8px; font-size: 13px; align-items: baseline; }
+  .xfer .top .dir { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .xfer .top .st { margin-left: auto; font-size: 12px; color: var(--muted); }
+  .bar { height: 4px; background: #1f2a35; border-radius: 999px; overflow: hidden; }
+  .bar > i { display: block; height: 100%; width: 0; background: #ffffff; transition: width .25s; }
+  .bar.fail > i { background: #555555; }
+  .bar.done > i { background: #ffffff; }
+  .xfer .err { color: #ffffff; font-size: 12px; font-weight: 500; }
+
+  footer { max-width: 880px; margin: 22px auto 0; color: #666666; font-size: 11.5px; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 22px; transform: translate(-50%, 14px);
+    background: #ffffff; color: #000000; padding: 9px 16px; border-radius: 999px;
+    font-size: 13px; font-weight: 550; opacity: 0; pointer-events: none;
+    transition: opacity .18s, transform .18s; max-width: 88vw;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .toast.bad { background: #111111; color: #ffffff; border: 1px solid #ffffff; }
+
+  @media (max-width: 520px) {
+    body { padding: 0 12px 48px; }
+    header { padding: 18px 0 14px; }
+    .peer { min-width: 0; flex: 1 1 130px; }
+    input:not([type]), input[type="text"] { width: 120px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">bhe<span>jo</span></div>
+  <div class="who"><b id="alias">…</b> <span id="devtype"></span></div>
+  <div class="spacer"></div>
+  <div class="chip" id="fp" title="Click to copy fingerprint">…</div>
+</header>
+
+<main>
+  <section class="panel hidden" id="requestsPanel">
+    <h2>Incoming</h2>
+    <div id="requests"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Send</h2>
+    <div class="peers" id="peers"></div>
+    <div class="drop" id="drop">
+      <p>Drop files or folders here</p>
+      <div class="row">
+        <button id="pickFiles">Choose files</button>
+        <button id="pickDir">Choose folder</button>
+      </div>
+    </div>
+    <input type="file" id="fileInput" multiple hidden>
+    <input type="file" id="dirInput" webkitdirectory hidden>
+    <div class="staged" id="staged"></div>
+    <div class="send-row" id="sendRow">
+      <span class="hint" id="stagedHint"></span>
+      <input id="pin" placeholder="PIN" inputmode="numeric" autocomplete="off">
+      <button id="sendBtn" class="primary" disabled>Send</button>
+      <button id="clearBtn" class="ghost small" hidden>Clear</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Activity</h2>
+    <div class="activity" id="activity"></div>
+  </section>
+</main>
+
+<footer id="foot"></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const TOKEN = "%%BHEJO_TOKEN%%";
+
+const $ = (id) => document.getElementById(id);
+let state = null;
+let selected = null;
+let busy = 0;
+
+function el(tag, props = {}, ...children) {
+  const node = document.createElement(tag);
+  for (const [key, value] of Object.entries(props)) {
+    if (value === null || value === undefined) continue;
+    if (key === "class") node.className = value;
+    else if (key === "text") node.textContent = value;
+    else if (key.startsWith("on")) node.addEventListener(key.slice(2).toLowerCase(), value);
+    else node.setAttribute(key, value);
+  }
+  for (const child of children.flat()) {
+    if (child === null || child === undefined || child === false) continue;
+    node.append(child.nodeType ? child : document.createTextNode(String(child)));
+  }
+  return node;
+}
+
+function bytes(n) {
+  if (!Number.isFinite(n)) return "?";
+  const u = ["B", "KB", "MB", "GB", "TB"];
+  let v = n, i = 0;
+  while (v >= 1024 && i < u.length - 1) { v /= 1024; i++; }
+  return i === 0 ? v + " B" : v.toFixed(v < 10 ? 1 : 0) + " " + u[i];
+}
+
+let toastTimer = null;
+function toast(message, bad = false) {
+  const node = $("toast");
+  node.textContent = message;
+  node.className = "toast show" + (bad ? " bad" : "");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { node.className = "toast"; }, 2600);
+}
+
+async function api(path, options = {}) {
+  const headers = Object.assign({ "x-bhejo-token": TOKEN }, options.headers || {});
+  const res = await fetch(path, Object.assign({}, options, { headers }));
+  const text = await res.text();
+  let data = null;
+  try { data = text ? JSON.parse(text) : null; } catch {}
+  if (!res.ok) throw new Error((data && data.error) || ("HTTP " + res.status));
+  return data;
+}
+
+// ---------------------------------------------------------------- rendering
+
+function renderPeers() {
+  const box = $("peers");
+  const peers = state.peers || [];
+  box.replaceChildren();
+
+  if (!peers.length) {
+    box.append(el("div", { class: "note", text: "No devices yet. Make sure the other device is running bhejo on the same network." }));
+    return;
+  }
+
+  for (const peer of peers) {
+    const node = el("div", {
+      class: "peer" + (selected === peer.fingerprint ? " selected" : ""),
+      onclick: () => { selected = selected === peer.fingerprint ? null : peer.fingerprint; renderAll(); },
+    },
+      el("div", { class: "name", text: peer.alias }),
+      el("div", { class: "addr", text: peer.address + ":" + peer.port }),
+    );
+    box.append(node);
+  }
+}
+
+function renderStaged() {
+  const box = $("staged");
+  const staged = state.staged || [];
+  box.replaceChildren();
+
+  for (const file of staged) {
+    box.append(el("div", { class: "file" },
+      el("span", { class: "nm", text: file.name }),
+      el("span", { class: "sz", text: bytes(file.size) }),
+      el("button", { class: "small ghost", text: "×", title: "Remove", onclick: async () => {
+        try { await api("/api/stage/" + encodeURIComponent(file.id), { method: "DELETE" }); }
+        catch (err) { toast(err.message, true); }
+        poll();
+      } }),
+    ));
+  }
+
+  $("clearBtn").hidden = staged.length === 0;
+  const total = staged.reduce((sum, file) => sum + file.size, 0);
+  $("stagedHint").textContent = staged.length
+    ? staged.length + " file" + (staged.length === 1 ? "" : "s") + " · " + bytes(total)
+    : "";
+  updateSendButton();
+}
+
+function renderRequests() {
+  const panel = $("requestsPanel");
+  const box = $("requests");
+  const requests = state.requests || [];
+  panel.classList.toggle("hidden", requests.length === 0);
+  box.replaceChildren();
+
+  for (const request of requests) {
+    const list = el("ul");
+    for (const file of request.files.slice(0, 8)) {
+      list.append(el("li", { text: file.fileName + "  " + bytes(file.size) }));
+    }
+    if (request.files.length > 8) list.append(el("li", { text: "…and " + (request.files.length - 8) + " more" }));
+
+    box.append(el("div", { class: "req" },
+      el("div", { class: "top" },
+        el("b", { text: request.alias }),
+        el("span", { class: "meta", text: request.address }),
+        el("span", { class: "meta", text: request.files.length + " file" + (request.files.length === 1 ? "" : "s") + ", " + bytes(request.totalBytes) }),
+        request.isNew ? el("span", { class: "new", text: "new device" }) : null,
+      ),
+      list,
+      el("div", { class: "row" },
+        el("button", { class: "primary", text: "Accept", onclick: () => decide(request.id, "accept") }),
+        el("button", { class: "danger", text: "Decline", onclick: () => decide(request.id, "decline") }),
+      ),
+    ));
+  }
+}
+
+async function decide(id, action) {
+  try {
+    await api("/api/incoming/" + encodeURIComponent(id), {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ action }),
+    });
+    toast(action === "accept" ? "Accepted" : "Declined");
+  } catch (err) {
+    toast(err.message, true);
+  }
+  poll();
+}
+
+function renderActivity() {
+  const box = $("activity");
+  const transfers = state.transfers || [];
+  box.replaceChildren();
+
+  for (const transfer of transfers) {
+    const pct = transfer.totalBytes > 0 ? Math.min(100, (transfer.sentBytes / transfer.totalBytes) * 100) : 0;
+    const barClass = "bar" + (transfer.status === "failed" ? " fail" : transfer.status === "done" ? " done" : "");
+    const label = transfer.status === "done"
+      ? "done · " + bytes(transfer.totalBytes)
+      : transfer.status === "failed"
+        ? "failed"
+        : pct.toFixed(0) + "%";
+
+    box.append(el("div", { class: "xfer" },
+      el("div", { class: "top" },
+        el("span", { class: "dir", text: transfer.direction === "out" ? "to" : "from" }),
+        el("b", { text: transfer.peerAlias }),
+        el("span", { class: "st", text: transfer.files.length + " file" + (transfer.files.length === 1 ? "" : "s") }),
+        el("span", { class: "st", text: label }),
+      ),
+      el("div", { class: barClass }, el("i", { style: "width:" + pct + "%" })),
+      transfer.error ? el("div", { class: "err", text: transfer.error }) : null,
+    ));
+  }
+}
+
+function updateSendButton() {
+  const staged = state ? state.staged.length : 0;
+  $("sendBtn").disabled = !selected || staged === 0 || busy > 0;
+  $("sendBtn").textContent = busy > 0 ? "Sending…" : "Send" + (staged ? " " + staged : "");
+}
+
+function renderAll() {
+  $("alias").textContent = state.device.alias;
+  $("devtype").textContent = state.device.deviceType;
+  $("fp").textContent = state.device.fingerprint.slice(0, 12) + "…";
+  $("fp").title = "Fingerprint (click to copy): " + state.device.fingerprint;
+  $("foot").textContent = "Saving to " + state.device.dir + (state.device.pin ? "  ·  PIN required: " + state.device.pin : "");
+  renderPeers();
+  renderStaged();
+  renderRequests();
+  renderActivity();
+  updateSendButton();
+}
+
+// ------------------------------------------------------------------ staging
+
+function stageError(err) { toast(err.message || String(err), true); }
+
+async function stageFile(file, name) {
+  const res = await fetch("/api/stage?name=" + encodeURIComponent(name), {
+    method: "POST",
+    headers: { "x-bhejo-token": TOKEN, "content-type": "application/octet-stream" },
+    body: file,
+  });
+  if (!res.ok) {
+    let message = "HTTP " + res.status;
+    try { message = (await res.json()).error || message; } catch {}
+    throw new Error(message);
+  }
+}
+
+async function stageFiles(files) {
+  const list = Array.from(files);
+  if (!list.length) return;
+  let done = 0;
+  for (const file of list) {
+    const name = file.webkitRelativePath || file.name;
+    try { await stageFile(file, name); } catch (err) { stageError(err); }
+    done++;
+    updateSendButton();
+  }
+  toast("Added " + done + " file" + (done === 1 ? "" : "s"));
+  poll();
+}
+
+async function walkEntry(entry, prefix) {
+  if (entry.isFile) {
+    const file = await new Promise((resolve, reject) => entry.file(resolve, reject));
+    await stageFile(file, prefix + entry.name);
+    return;
+  }
+  if (!entry.isDirectory) return;
+  const reader = entry.createReader();
+  const children = [];
+  for (;;) {
+    const batch = await new Promise((resolve, reject) => reader.readEntries(resolve, reject));
+    if (!batch.length) break;
+    children.push(...batch);
+  }
+  for (const child of children) await walkEntry(child, prefix + entry.name + "/");
+}
+
+// ---------------------------------------------------------------- interaction
+
+$("fp").addEventListener("click", async () => {
+  if (!state) return;
+  try { await navigator.clipboard.writeText(state.device.fingerprint); toast("Fingerprint copied"); }
+  catch { toast(state.device.fingerprint); }
+});
+
+$("pickFiles").addEventListener("click", () => $("fileInput").click());
+$("pickDir").addEventListener("click", () => $("dirInput").click());
+$("fileInput").addEventListener("change", (e) => { stageFiles(e.target.files); e.target.value = ""; });
+$("dirInput").addEventListener("change", (e) => { stageFiles(e.target.files); e.target.value = ""; });
+$("clearBtn").addEventListener("click", async () => {
+  for (const file of (state.staged || [])) {
+    try { await api("/api/stage/" + encodeURIComponent(file.id), { method: "DELETE" }); } catch {}
+  }
+  poll();
+});
+
+const drop = $("drop");
+["dragenter", "dragover"].forEach((name) => drop.addEventListener(name, (e) => {
+  e.preventDefault();
+  drop.classList.add("over");
+}));
+["dragleave", "drop"].forEach((name) => drop.addEventListener(name, (e) => {
+  e.preventDefault();
+  drop.classList.remove("over");
+}));
+
+drop.addEventListener("drop", async (e) => {
+  const items = e.dataTransfer && e.dataTransfer.items;
+  if (!items || !items.length) { stageFiles(e.dataTransfer.files); return; }
+
+  const entries = [];
+  for (const item of items) {
+    if (item.kind !== "file") continue;
+    const entry = item.webkitGetAsEntry && item.webkitGetAsEntry();
+    if (entry) entries.push(entry);
+  }
+
+  if (!entries.length) { stageFiles(e.dataTransfer.files); return; }
+
+  let count = 0;
+  for (const entry of entries) {
+    try { await walkEntry(entry, ""); count++; } catch (err) { stageError(err); }
+  }
+  toast("Added files from " + count + " item" + (count === 1 ? "" : "s"));
+  poll();
+});
+
+$("sendBtn").addEventListener("click", async () => {
+  if (!selected) return toast("Pick a device first", true);
+  busy = 1;
+  updateSendButton();
+  try {
+    const pin = $("pin").value.trim();
+    await api("/api/send", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ target: selected, pin: pin || null }),
+    });
+    toast("Sending…");
+  } catch (err) {
+    toast(err.message, true);
+  } finally {
+    busy = 0;
+    poll();
+  }
+});
+
+// -------------------------------------------------------------------- polling
+
+let polling = false;
+
+async function poll() {
+  if (polling) return;
+  polling = true;
+  try {
+    const next = await api("/api/state");
+    state = next;
+
+    if (selected && !(state.peers || []).some((p) => p.fingerprint === selected)) {
+      selected = null;
+    }
+    renderAll();
+  } catch (err) {
+    // The receiver stopped, or the page outlived the process.
+    $("alias").textContent = "disconnected";
+    $("devtype").textContent = "";
+    toast("Lost connection to the app", true);
+  } finally {
+    polling = false;
+  }
+}
+
+poll();
+setInterval(poll, 900);
+</script>
+</body>
+</html>

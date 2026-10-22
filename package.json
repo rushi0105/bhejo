@@ -1,0 +1,17 @@
+{
+  "name": "bhejo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Peer-to-peer file sharing on your local network. No cloud, no accounts, no telemetry, no dependencies.",
+  "bin": {
+    "bhejo": "./bin/bhejo.mjs"
+  },
+  "engines": {
+    "node": ">=18.17"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "license": "MIT"
+}

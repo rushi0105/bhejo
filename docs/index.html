@@ -63,7 +63,9 @@
     font-size:clamp(19px,2.3vw,23px);line-height:1.34;letter-spacing:-.01em;
     color:var(--ink-2);max-width:min(42ch,100%);margin:24px auto 0;font-weight:400;
   }
-  .actions{display:flex;align-items:center;justify-content:center;gap:26px;flex-wrap:wrap;margin-top:38px}
+  .actions{display:flex;flex-direction:column;align-items:center;gap:16px;margin-top:38px}
+  .actions .link{font-size:15px;color:var(--ink-2)}
+  .actions .link:hover{color:var(--ink)}
   .pill{
     display:inline-flex;align-items:center;justify-content:center;
     background:var(--ink);color:#fff;border-radius:980px;
@@ -181,6 +183,32 @@
   .dl-foot{margin:30px 0 0;text-align:center;font-size:13px;line-height:1.6;color:var(--ink-2)}
   .dl-foot a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line)}
   .dl-foot a:hover{text-decoration-color:var(--ink)}
+
+  /* ---- download note sheet ---- */
+  .sheet{
+    position:fixed;inset:0;z-index:120;display:grid;place-items:center;padding:24px;
+    background:rgba(0,0,0,.42);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  }
+  .sheet[hidden]{display:none}
+  .sheet [hidden]{display:none!important}
+  .sheet-card{
+    background:#fff;border-radius:24px;padding:32px 28px 22px;width:100%;max-width:420px;
+    box-shadow:0 40px 90px rgba(0,0,0,.24);text-align:center;
+  }
+  .sheet-card h3{margin:0;font-size:22px;line-height:1.2;letter-spacing:-.022em;font-weight:600}
+  .sheet-card p{margin:12px 0 24px;font-size:14px;line-height:1.55;color:var(--ink-2)}
+  .sheet-card .dl-btn{width:100%;height:46px}
+  .sheet-alt{
+    display:flex;align-items:center;justify-content:center;width:100%;height:44px;margin-top:10px;
+    background:none;border:1px solid var(--line);border-radius:999px;
+    font:inherit;font-size:14px;color:var(--ink-2);text-decoration:none;cursor:pointer;
+  }
+  .sheet-alt:hover{border-color:var(--ink-3);color:var(--ink)}
+  .sheet-close{
+    display:block;width:100%;margin-top:8px;padding:12px 0 0;background:none;border:0;
+    font:inherit;font-size:14px;color:var(--ink-3);cursor:pointer;
+  }
+  .sheet-close:hover{color:var(--ink)}
 
   /* ---- limits ---- */
   .limits{display:grid;grid-template-columns:repeat(2,1fr);gap:0 56px;margin-top:56px}
@@ -329,7 +357,7 @@
           <h3>Windows</h3>
           <p class="dl-meta">Windows 10 / 11 · 49 KB</p>
           <p class="dl-note">Portable folder with a one-click launcher. Needs Node.js 18.17 or newer, installed once.</p>
-          <a class="dl-btn" href="downloads/bhejo-0.1.0-windows.zip" download>Download for Windows</a>
+          <a class="dl-btn" href="downloads/bhejo-0.1.0-windows.zip" data-computer download>Download for Windows</a>
         </article>
 
         <article class="dl-card" data-reveal>
@@ -340,10 +368,10 @@
           <h3>macOS</h3>
           <p class="dl-meta">macOS 12+ · Intel and Apple silicon · 50 KB</p>
           <p class="dl-note">Double-click <code>Bhejo.command</code>. One <code>chmod</code> may be needed after unzipping — the readme says how.</p>
-          <a class="dl-btn" href="downloads/bhejo-0.1.0-macos.zip" download>Download for macOS</a>
+          <a class="dl-btn" href="downloads/bhejo-0.1.0-macos.zip" data-computer download>Download for macOS</a>
         </article>
 
-        <article class="dl-card" data-reveal>
+        <article class="dl-card" data-reveal data-platform="android">
           <div class="dl-top">
             <span class="dl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.4"/><path d="M10.8 18.6h2.4"/></svg></span>
             <span class="tag">Ready</span>
@@ -351,7 +379,7 @@
           <h3>Android</h3>
           <p class="dl-meta">Android 10+ · 8.8 MB · APK</p>
           <p class="dl-note">Native app. Install it directly, no store account needed. Received files land in <code>Downloads/Bhejo</code>.</p>
-          <a class="dl-btn" href="downloads/bhejo-0.1.0-android.apk" download>Download for Android</a>
+          <a class="dl-btn" href="downloads/bhejo-0.1.0-android.apk" data-ios-block download>Download for Android</a>
         </article>
 
         <article class="dl-card" data-reveal>
@@ -366,7 +394,7 @@
         </article>
       </div>
 
-      <p class="dl-foot">The iPhone build is still in development. Need something else? <a href="mailto:jdmibusiness01@gmail.com?subject=Bhejo%20build%20request">Ask for a build</a>.</p>
+      <p class="dl-foot">The iPhone build is still in development. Need another platform or a build for your team? Write to <a href="mailto:jdmibusiness01@gmail.com">jdmibusiness01@gmail.com</a>.</p>
     </div>
   </section>
 
@@ -481,6 +509,115 @@
       nodes[i].classList.add('will-reveal');
       io.observe(nodes[i]);
     }
+  })();
+</script>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="sheet-title" aria-describedby="sheet-text">
+    <h3 id="sheet-title">That file is for a computer.</h3>
+    <p id="sheet-text">The desktop builds are .zip folders. They will not run on this phone.</p>
+    <a class="dl-btn" id="sheet-get" href="downloads/bhejo-0.1.0-android.apk" download>Get the Android APK</a>
+    <a class="sheet-alt" id="sheet-mail" href="mailto:jdmibusiness01@gmail.com?subject=Bhejo%20for%20iPhone" hidden>Email me when the iPhone build ships</a>
+    <button class="sheet-alt" id="sheet-anyway" type="button">Download the .zip anyway</button>
+    <button class="sheet-close" id="sheet-close" type="button">Cancel</button>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var ua = navigator.userAgent || '';
+    var isAndroid = /Android/i.test(ua);
+    var isIOS = /iPhone|iPad|iPod/i.test(ua);
+    if (!isAndroid && !isIOS) return;
+
+    var apk = 'downloads/bhejo-0.1.0-android.apk';
+
+    if (isAndroid) {
+      var pill = document.querySelector('.hero .pill');
+      if (pill) {
+        pill.setAttribute('href', apk);
+        pill.setAttribute('download', '');
+        pill.textContent = 'Download for Android';
+      }
+      var card = document.querySelector('[data-platform="android"]');
+      if (card) card.style.order = '-1';
+    }
+
+    var sheet = document.getElementById('sheet');
+    if (!sheet) return;
+
+    var title = document.getElementById('sheet-title');
+    var text = document.getElementById('sheet-text');
+    var getApk = document.getElementById('sheet-get');
+    var mail = document.getElementById('sheet-mail');
+    var anyway = document.getElementById('sheet-anyway');
+    var closeBtn = document.getElementById('sheet-close');
+    var pending = '';
+    var lastFocus = null;
+
+    function open(href, kind) {
+      pending = href;
+      lastFocus = document.activeElement;
+      if (isAndroid) {
+        title.textContent = 'That file is for a computer.';
+        text.textContent = 'The Windows and macOS builds are .zip folders for a desktop. On this phone, install the Android app instead — same job, built for the device.';
+        getApk.hidden = false;
+        mail.hidden = true;
+        anyway.textContent = 'Download the .zip anyway';
+      } else {
+        getApk.hidden = true;
+        mail.hidden = false;
+        if (kind === 'android') {
+          title.textContent = 'That file is for Android.';
+          text.textContent = 'An .apk will not install on an iPhone. Bhejo for iPhone needs a Mac, Xcode and an Apple developer account — ask me and I will tell you the day it ships.';
+          anyway.textContent = 'Download the .apk anyway';
+        } else {
+          title.textContent = 'The iPhone app is not ready.';
+          text.textContent = 'Bhejo for iPhone needs a Mac, Xcode and an Apple developer account. You can still take the computer build, or ask me to tell you when it ships.';
+          anyway.textContent = 'Download the .zip anyway';
+        }
+      }
+      sheet.hidden = false;
+      document.documentElement.style.overflow = 'hidden';
+      closeBtn.focus();
+    }
+
+    function close() {
+      sheet.hidden = true;
+      document.documentElement.style.overflow = '';
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    var links = document.querySelectorAll('a[data-computer]');
+    for (var i = 0; i < links.length; i++) {
+      links[i].addEventListener('click', function (event) {
+        event.preventDefault();
+        open(this.getAttribute('href'), 'computer');
+      });
+    }
+
+    if (isIOS) {
+      var apks = document.querySelectorAll('a[data-ios-block]');
+      for (var j = 0; j < apks.length; j++) {
+        apks[j].addEventListener('click', function (event) {
+          event.preventDefault();
+          open(this.getAttribute('href'), 'android');
+        });
+      }
+    }
+
+    anyway.addEventListener('click', function () {
+      var href = pending;
+      close();
+      if (href) window.location.href = href;
+    });
+    closeBtn.addEventListener('click', close);
+    sheet.addEventListener('click', function (event) {
+      if (event.target === sheet) close();
+    });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && !sheet.hidden) close();
+    });
   })();
 </script>
 </body>

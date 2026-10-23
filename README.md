@@ -20,12 +20,13 @@ Questions, bugs, or a build for your platform: **jdmibusiness01@gmail.com**.
 |---|---|---|
 | Windows 10 / 11 | [bhejo-0.1.0-windows.zip](https://rushi0105.github.io/bhejo/downloads/bhejo-0.1.0-windows.zip) | unzip, run `Bhejo.cmd` |
 | macOS 12+ | [bhejo-0.1.0-macos.zip](https://rushi0105.github.io/bhejo/downloads/bhejo-0.1.0-macos.zip) | unzip, run `Bhejo.command` |
-| Android | not built yet | works under Termux today |
+| Android 10+ | [bhejo-0.1.0-android.apk](https://rushi0105.github.io/bhejo/downloads/bhejo-0.1.0-android.apk) | install the APK directly, no store account |
 | iPhone | not built yet | needs a Mac and an Apple developer account |
 
 Both desktop builds are about 50 KB and need Node.js 18.17 or newer installed
 once. They are portable — no installer, no registry entry, no background service.
-The same files live in [`dist/`](dist/), one folder per platform.
+The Android build is a native Kotlin app, 8.8 MB, no Node.js required. The same
+files live in [`dist/`](dist/), one folder per platform.
 
 ![The Bhejo browser interface](docs/screenshot.png)
 
@@ -52,8 +53,8 @@ you accept.
 Node.js 18.17 or newer. That is the entire list — `npm install` is not part of
 the setup, because there is nothing to install.
 
-Works on Windows, macOS and Linux. On Android it runs under Termux; iOS has no
-supported path yet (see [Limitations](#limitations)).
+Works on Windows, macOS and Linux, plus a native Android app (API 29 and newer).
+iOS has no supported path yet (see [Limitations](#limitations)).
 
 ## Use
 
@@ -224,9 +225,10 @@ Honest list of what is not built yet:
 - **No desktop app.** The UI is a page served by the receiver, so there is no
   tray icon and no background daemon: something still has to start the process.
   The page is deliberately not reachable from other devices on the LAN.
-- **No mobile.** iOS needs a real app (WebRTC or a native wrapper); Android
-  works under Termux.
-- **No Android/iOS background discovery** — mobile OSes kill idle sockets.
+- **No iOS app.** It needs a Mac, Xcode and a developer account; Android ships
+  as a native APK.
+- **The Android app must stay in the foreground.** There is no foreground
+  service yet, so Android stops the receiver when the app is backgrounded.
 - **No group send.** One receiver at a time.
 - **No IPv6.** IPv4 only.
 

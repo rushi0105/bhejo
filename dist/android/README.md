@@ -1,40 +1,47 @@
 # Android
 
-**No APK yet.** This folder is intentionally empty of binaries.
+`bhejo-0.1.0.apk` — 8.8 MB, Android 10 (API 29) and newer, no Node.js needed.
 
-## Why
+This is the native Kotlin app from [`android/`](../android/). It speaks the same
+protocol as the desktop build: multicast discovery on `224.0.0.167:53317`,
+TLS with a persisted self-signed certificate, fingerprint pinning, optional PIN,
+and SHA-256 checked on both ends.
 
-Bhejo is a Node.js process plus a local web interface. Android cannot run that
-process without Termux, and an APK that simply wraps the web page would have
-nothing to talk to. A real Android app has to be written natively (Kotlin) and
-implement the same discovery and transfer protocol:
+## Install
 
-- multicast announcement on `224.0.0.167:53317`
-- HTTPS receiver with a persisted self-signed certificate
-- fingerprint pinning and the optional PIN
-- streaming upload with SHA-256 verification
+1. Copy the APK to the phone (USB, email to yourself, or download it from the
+   website).
+2. Open it. Android asks to allow installs from this source; allow it for the
+   app you used to open the file, install, then turn the permission back off.
+3. Open Bhejo. The phone starts receiving immediately and shows its own
+   fingerprint.
 
-## What works today
+Play Protect may show "unrecognised app" because the APK is signed with a
+self-generated key rather than a Play Store key. That is expected for a
+direct install.
 
-Install Termux from F-Droid, then:
+## Use
 
-```bash
-pkg install nodejs git
-git clone https://github.com/rushi0105/bhejo.git
-cd bhejo
-node bin/bhejo.mjs receive
-```
+- **Receive:** on the computer run `bhejo receive`, then `bhejo send <files>
+  --to <phone>`. Accept the dialog on the phone. Files are saved to
+  `Downloads/Bhejo`.
+- **Send:** tap **Choose files**, pick one or more, then either tap a device in
+  **Nearby** or use **Add a computer by IP** and type the address printed by
+  `bhejo receive`. Confirm the fingerprint once; it is pinned from then on.
+- **PIN:** if the receiver requires one, type it in the PIN field before you
+  send. If you set a PIN on the phone, incoming senders must know it too.
+- Long-press a saved computer to forget its pinned fingerprint.
 
-Open `http://127.0.0.1:53318` in the phone's browser. This is the honest
-workaround, not a finished product.
+## Limits
 
-## What is needed to ship the APK
+- The app must stay in the foreground while receiving. There is no foreground
+  service yet, so Android stops the server when the app is backgrounded.
+- Guest Wi-Fi with client isolation blocks transfers; the devices must be able
+  to reach each other.
+- No resume: an interrupted file restarts from zero.
 
-- Android SDK command-line tools and a JDK (Java 21 is already on the development
-  machine, the SDK is not)
-- a native Android project, around 1–2 weeks of work for a first version
-- your Google Play developer account ($25 one time, identity verification)
-- a signed release (`.aab`), a privacy policy URL, and the Data safety form —
-  the policy page already exists at <https://rushi0105.github.io/bhejo/privacy.html>
+Signed with the release key in `android/keystore/` (not committed). Keep a copy
+of that keystore: updates, including any future Play Store release, must be
+signed with the same key.
 
 Contact: jdmibusiness01@gmail.com

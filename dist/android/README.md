@@ -20,6 +20,16 @@ Play Protect may show "unrecognised app" because the APK is signed with a
 self-generated key rather than a Play Store key. That is expected for a
 direct install.
 
+## Checksum
+
+```
+SHA-256  33246bb4977cb90f83bb4b8236902bf8bd71f01bdb6868471426f680ee0b5798
+```
+
+Verify with `certutil -hashfile bhejo-0.1.0.apk SHA256` on Windows or
+`shasum -a 256 bhejo-0.1.0.apk` on macOS. The same line is published next to
+the download as `bhejo-0.1.0-android.apk.sha256`.
+
 ## Use
 
 - **Receive:** on the computer run `bhejo receive`, then `bhejo send <files>

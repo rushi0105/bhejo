@@ -12,7 +12,7 @@ Both devices must be on the same Wi-Fi or LAN. Nothing leaves the local network.
 
 Landing page: <https://rushi0105.github.io/bhejo/>
 
-Questions, bugs, or a build for your platform: **jdmibusiness01@gmail.com**.
+Questions, bugs, or a build for your platform: **[email me](mailto:jdmibusiness01@gmail.com)**.
 
 ## Download
 
@@ -276,7 +276,7 @@ already released under the MIT licence stays available under that licence.
 
 ## Contact
 
-jdmibusiness01@gmail.com
+[Email me](mailto:jdmibusiness01@gmail.com) — questions, bugs, or a build for your platform.
 
 ## License
 

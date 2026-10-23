@@ -14,6 +14,19 @@ Landing page: <https://rushi0105.github.io/bhejo/>
 
 Questions, bugs, or a build for your platform: **jdmibusiness01@gmail.com**.
 
+## Download
+
+| Platform | Build | How |
+|---|---|---|
+| Windows 10 / 11 | [bhejo-0.1.0-windows.zip](https://rushi0105.github.io/bhejo/downloads/bhejo-0.1.0-windows.zip) | unzip, run `Bhejo.cmd` |
+| macOS 12+ | [bhejo-0.1.0-macos.zip](https://rushi0105.github.io/bhejo/downloads/bhejo-0.1.0-macos.zip) | unzip, run `Bhejo.command` |
+| Android | not built yet | works under Termux today |
+| iPhone | not built yet | needs a Mac and an Apple developer account |
+
+Both desktop builds are about 50 KB and need Node.js 18.17 or newer installed
+once. They are portable — no installer, no registry entry, no background service.
+The same files live in [`dist/`](dist/), one folder per platform.
+
 ![The Bhejo browser interface](docs/screenshot.png)
 
 ## Why not just use LocalSend?

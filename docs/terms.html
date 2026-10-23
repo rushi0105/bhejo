@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terms — Bhejo</title>
+<meta name="description" content="The terms that cover using Bhejo, the local-network file transfer tool.">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231d1d1f'/%3E%3Cpath d='M32 17v22m0 0-10-10m10 10 10-10M18 47h28' stroke='%23fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#fff; --bg-alt:#f5f5f7; --ink:#1d1d1f; --ink-2:#6e6e73; --line:#d2d2d7; --line-soft:#e8e8ed;
+    --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+    font-size:17px;line-height:1.55;letter-spacing:-.011em;
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  }
+  a{color:inherit}
+  .bar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line-soft)}
+  .bar .inner{display:flex;align-items:center;justify-content:space-between;height:49px}
+  .inner{max-width:1120px;margin:0 auto;padding:0 24px}
+  .mark{font-size:21px;font-weight:600;letter-spacing:-.028em;text-decoration:none}
+  .bar a.back{font-size:12px;color:var(--ink-2);text-decoration:none}
+  .bar a.back:hover{color:var(--ink)}
+  main{padding:96px 0 104px}
+  .wrap{max-width:720px;margin:0 auto;padding:0 24px}
+  h1{font-size:clamp(34px,5vw,48px);line-height:1.08;letter-spacing:-.03em;font-weight:600;margin:0 0 12px}
+  .date{margin:0 0 56px;font-size:13px;color:var(--ink-2)}
+  h2{font-size:21px;line-height:1.25;letter-spacing:-.02em;font-weight:600;margin:48px 0 12px}
+  p{margin:0 0 16px;color:var(--ink-2)}
+  strong{color:var(--ink);font-weight:500}
+  ul{margin:0 0 16px;padding-left:20px;color:var(--ink-2)}
+  li{margin-bottom:8px}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px;background:var(--bg-alt);border-radius:5px;padding:1px 6px;color:var(--ink)}
+  .note{margin-top:56px;padding-top:28px;border-top:1px solid var(--line-soft);font-size:14px;color:var(--ink-2)}
+  footer{background:var(--bg-alt);border-top:1px solid var(--line-soft);padding:40px 0 56px}
+  .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:12px;color:var(--ink-2);letter-spacing:-.01em;max-width:1120px;margin:0 auto;padding:0 24px}
+  .foot a{color:var(--ink-2);text-decoration:underline;text-underline-offset:2px;text-decoration-color:var(--line)}
+  .foot a:hover{color:var(--ink);text-decoration-color:var(--ink)}
+  .foot-links{display:flex;gap:22px;flex-wrap:wrap}
+  @media (max-width:620px){ main{padding:64px 0 80px} h2{margin-top:40px} }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="inner">
+    <a class="mark" href="./">bhejo</a>
+    <a class="back" href="./">Back to home</a>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <h1>Terms of use</h1>
+    <p class="date">Last updated 23 October 2026</p>
+
+    <p>Bhejo is a small piece of software that moves files between devices on the same local network. These terms cover the software, the browser interface that ships with it, and this website. By using Bhejo you agree to them.</p>
+
+    <h2>1. The software is open source</h2>
+    <p>Bhejo is released under the <strong>MIT licence</strong>. That licence is the legal agreement that governs the code, and it is included in the repository. These terms do not take away any right the MIT licence gives you.</p>
+
+    <h2>2. There is no service</h2>
+    <p>We do not run a server, an account system, or cloud storage for Bhejo. Files travel directly from one of your devices to another over your own network. Nothing is uploaded to us, and we have no way to see, recover, or delete a file you send.</p>
+
+    <h2>3. What you are responsible for</h2>
+    <ul>
+      <li>Only send files you have the right to send, and respect the law where you are.</li>
+      <li>Keep your own backups. A cancelled or interrupted transfer is not recoverable from us.</li>
+      <li>Decide who can reach the receiving device. Anyone on the same network who has the address and PIN can send to it.</li>
+      <li>Keep the software reasonably up to date if you expose it on a network you do not fully trust.</li>
+    </ul>
+
+    <h2>4. No warranty</h2>
+    <p>The software is provided <strong>“as is”, without warranty of any kind</strong>, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement. You use it at your own risk.</p>
+
+    <h2>5. Limitation of liability</h2>
+    <p>To the fullest extent permitted by law, the author is not liable for any indirect, incidental, special, or consequential damages, or for any loss of data, files, profits, or goodwill, arising from the use of or inability to use Bhejo.</p>
+
+    <h2>6. Price</h2>
+    <p>Bhejo is <strong>free while it is in beta</strong>. Paid plans may be introduced later. Anything already released under the MIT licence stays available under that licence. If a paid plan appears, its price and terms will be shown before you pay anything.</p>
+
+    <h2>7. This website</h2>
+    <p>The site is documentation and a download page. It is provided for information only and may change or go offline without notice.</p>
+
+    <h2>8. Changes to these terms</h2>
+    <p>If these terms change, the date at the top of this page changes with them. Continuing to use Bhejo after a change means you accept the updated terms.</p>
+
+    <h2>9. Contact</h2>
+    <p>Questions about these terms: <a href="mailto:jdmibusiness01@gmail.com">jdmibusiness01@gmail.com</a>.</p>
+
+    <p class="note">Bhejo · MIT licensed · <a href="privacy.html">Privacy</a> · <a href="./">Home</a></p>
+  </div>
+</main>
+
+<footer>
+  <div class="foot">
+    <div>Bhejo · MIT licensed · no telemetry, no cookies, no analytics</div>
+    <div class="foot-links">
+      <a href="mailto:jdmibusiness01@gmail.com">Contact</a>
+      <a href="terms.html">Terms</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -12,6 +12,8 @@ Both devices must be on the same Wi-Fi or LAN. Nothing leaves the local network.
 
 Landing page: <https://rushi0105.github.io/bhejo/>
 
+Questions, bugs, or a build for your platform: **jdmibusiness01@gmail.com**.
+
 ![The Bhejo browser interface](docs/screenshot.png)
 
 ## Why not just use LocalSend?
@@ -251,6 +253,15 @@ src/cli.mjs         command line interface
 
 `BHEJO_HOME` overrides the state directory (`~/.bhejo`), which is handy for
 running two instances on one machine.
+
+## Pricing
+
+Bhejo is free while it is in beta. Paid plans may be added later; everything
+already released under the MIT licence stays available under that licence.
+
+## Contact
+
+jdmibusiness01@gmail.com
 
 ## License
 

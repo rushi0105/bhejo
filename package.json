@@ -4,6 +4,24 @@
   "private": true,
   "type": "module",
   "description": "Peer-to-peer file sharing on your local network. No cloud, no accounts, no telemetry, no dependencies.",
+  "homepage": "https://rushi0105.github.io/bhejo/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rushi0105/bhejo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rushi0105/bhejo/issues"
+  },
+  "author": "rushi0105",
+  "keywords": [
+    "file-sharing",
+    "lan",
+    "p2p",
+    "tls",
+    "zero-dependencies",
+    "nodejs",
+    "cli"
+  ],
   "bin": {
     "bhejo": "./bin/bhejo.mjs"
   },
